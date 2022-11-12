@@ -211,7 +211,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"rockpaperscissors.sol": "RockPaperScissors"
+			"Group Projects/Group Project # 3_Rock_Paper_scissors/rockpaperscissors.sol": "RockPaperScissors"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -222,7 +222,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"rockpaperscissors.sol": {
+		"Group Projects/Group Project # 3_Rock_Paper_scissors/rockpaperscissors.sol": {
 			"keccak256": "0xfcc9192a0fa646d25f77d75ef344e2fc0a4bc80e032c66ded5b4ed76d913626f",
 			"urls": [
 				"bzz-raw://06a50c7ee8ab8753e067321cd168f8a84f3c98a54772d84b3ee186a46d5aef9f",
