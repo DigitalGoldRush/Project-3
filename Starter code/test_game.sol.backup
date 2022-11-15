@@ -14,8 +14,8 @@ contract CoinFlip {
 
 
     // Players' addresses
-    address  playerA;
-    address  HouseWallet;
+    address payable playerA;
+    address payable HouseWallet; // = 0x10b21F7DC7d6BDB16660D827442c7edb3d2523eA; //
 
 
     
@@ -96,7 +96,7 @@ contract CoinFlip {
 
     function getOutcome() public has_player_played returns (uint) {
     
-    
+        
         randomNum = uint(blockhash(block.number-1)) % 999999;
         
 
@@ -106,8 +106,7 @@ contract CoinFlip {
             if (playerChoice == 2) {
 
                 paid = 1;            
-                payable(playerA).transfer(address(this).balance);  //changed this to be compatible with latest solidity compiler
-                //playerA.transfer(address(this).balance);
+                playerA.transfer(address(this).balance);
                 reset();
             
             }
@@ -121,8 +120,7 @@ contract CoinFlip {
 
                 paid = 1;
                 //reset();  // Reset game before paying to avoid reentrancy attacks
-                payable(playerA).transfer(address(this).balance);  //changed this to be compatible with latest solidity compiler
-                //playerA.transfer(address(this).balance);
+                playerA.transfer(address(this).balance);
                 reset();
             
             }
@@ -133,9 +131,7 @@ contract CoinFlip {
 
             
             //reset();  // Reset game before paying to avoid reentrancy attacks
-            paid = 1;
-			payable(HouseWallet).transfer(address(this).balance);
-            //HouseWallet.transfer(address(this).balance);
+            HouseWallet.transfer(address(this).balance);
             reset();
            
 

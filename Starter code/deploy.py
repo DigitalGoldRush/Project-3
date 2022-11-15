@@ -3,7 +3,7 @@ from web3 import Web3
 from solcx import compile_standard, install_solc
 
 # Install Solidity compiler.
-_solc_version = "0.5.1"
+_solc_version = "0.8.17"
 install_solc(_solc_version)
 
 with open("test_game.sol", "r") as file:
@@ -39,8 +39,8 @@ with open("coinflip_abi.json", "w") as file:
 # For connecting to ganache
 w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:7545"))
 chain_id = 1337
-address = "0x26eF4E04ac189970b27314da91993a87C1e6245D"
-private_key = "29a2ddefabcba06d6a655dfa810e0529305ffdfcabc96056df614880dd4494e3" 
+address = "0x2fF85d6C07669A511d6d87F99a02D98921aC174C"
+private_key = "de903f853697caf9395ce24acfbbdb7ae4bcf912e1946762f4080fa5e3c5355f" 
 
 # Create the contract in Python
 coinflip_contract = w3.eth.contract(abi=abi, bytecode=bytecode)
