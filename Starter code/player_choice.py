@@ -8,10 +8,10 @@ from pathlib import Path
 # Define and connect a new Web3 provider
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545/'))
 
-with open(Path('rps_abi.json')) as f:
+with open(Path('coinflip_abi.json')) as f:
     contract_abi = json.load(f)
 
-contract_address = "0x28EC59AD969E744ea6Ed09DFE0a1b2F068a98EC8"
+contract_address = "0x1b26088bef6E2AF862D65E5607Bfb7c3b850a22D"
 
 contract = w3.eth.contract(
         address=contract_address,
@@ -20,7 +20,7 @@ contract = w3.eth.contract(
 
 accounts = w3.eth.accounts
 
-address = "0x5160D62e1EB93ceeB7ff635E15bE8589972E93aD"
+address = "0x669Ee7f0BfA6BC3D0F932aB22c107FCC7cB9e288"
 address2 = "0x26eF4E04ac189970b27314da91993a87C1e6245D"
 
 
@@ -38,6 +38,6 @@ def get_balance(w3, address):
 
 #receipt = contract.functions.BET_MIN().call()
 
-contract.functions.register().transact({"from": w3.eth.accounts[0], "value": 10000000000000000000, "gasPrice": w3.eth.gas_price,})
+#contract.functions.playerChoice().transact({"from": w3.eth.accounts[0], "data" : 1,  "gasPrice": w3.eth.gas_price,})
 
-print('it ran!')
+contract.functions.playerChooses(2).transact({"from": w3.eth.accounts[1], "gasPrice" : w3.eth.gas_price,})

@@ -23,14 +23,17 @@ compiled_sol = compile_standard(
 )
 print(compiled_sol)
 
-with open("coinflip_abi.json", "w") as file:
-    json.dump(compiled_sol, file)
+#with open("coinflip_abi.json", "w") as file:
+#    json.dump(compiled_sol, file)
 
     
 # get bytecode
 bytecode = compiled_sol["contracts"]["test_game.sol"]["CoinFlip"]["evm"]["bytecode"]["object"]
 # get abi
 abi = json.loads(compiled_sol["contracts"]["test_game.sol"]["CoinFlip"]["metadata"])["output"]["abi"]
+
+with open("coinflip_abi.json", "w") as file:
+    json.dump(abi, file)
 
 
 # For connecting to ganache

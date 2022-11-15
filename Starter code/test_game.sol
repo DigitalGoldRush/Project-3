@@ -43,14 +43,14 @@ contract CoinFlip {
         
         if (HouseWallet == address(0x0)) {
             HouseWallet = msg.sender;
-            housePlayed = 1;
+            housePlayed = msg.value;
 
         }
 
         else if ( playerA == address(0x0) && HouseWallet != address(0x0) ) {
             playerA    = msg.sender;
             initialBet = msg.value;
-            playerPlayed = 1;
+            playerPlayed = msg.value;
       
         }
 
@@ -146,10 +146,9 @@ contract CoinFlip {
         initialBet      = 0;
         playerA         = address(0x0);
         HouseWallet     = address(0x0);
-        housePlayed     = 0;
-        playerPlayed    = 0;
-        playerChoice    = 0;
-       
+	    housePlayed     = 0;
+		playerPlayed	= 0;
+  
     }
 
 
@@ -185,9 +184,13 @@ contract CoinFlip {
         HouseWallet     = address(0x0);
         outcome         = 0;
         paid            = 0;
-
-
-    }
+		randomNum		= 0;
+		playerChoice	= 0;
+    	housePlayed     = 0;
+		playerPlayed	= 0;
+ }
 }
+
+
 
 
