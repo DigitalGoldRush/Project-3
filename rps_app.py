@@ -22,7 +22,7 @@ def load_contract():
 
     # Load the contract ABI
     
-    with open(Path('Group Projects/Group Project # 3_Rock_Paper_scissors/Contracts/Compiled/rockpaperscissors_ABI.json')) as f:
+    with open(Path('./Contracts/Compiled/rockpaperscissors_ABI.json')) as f:
         contract_abi = json.load(f)
 
     # Set the contract address (this is the address of the deployed contract)
@@ -39,7 +39,15 @@ def load_contract():
 # Load the contract
 contract = load_contract()
 
-st.title("Wallet Connection")
+st.title("Rock, Paper, Scissors")
+
+if st.button('Play Game'):
+    st.write('Hello dear patron, would you like to play a game?')
+
+else:
+    st.write('Goodbye')
+
+    
 st.write("Choose an account to get started")
 accounts = w3.eth.accounts
 address = st.selectbox("Select Account", options=accounts)
@@ -48,7 +56,9 @@ st.markdown("---")
 ################################################################################
 # Register New Artwork
 ################################################################################
-
+option = st.selectbox('Pick a start gesture', ('Rock', 'Paper', 'Scissors'))
+                
+st.write(option)
 
 
 ################################################################################
