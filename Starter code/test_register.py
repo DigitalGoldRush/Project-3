@@ -20,8 +20,8 @@ contract = w3.eth.contract(
 
 accounts = w3.eth.accounts
 
-address = "0x4AD281C2Ff3a2635878B00DE2D33EE828dba2Bd0"
-address2 = "0x528B3026ED873f4Dd851902AA055208492F7C923"
+address = "0x5160D62e1EB93ceeB7ff635E15bE8589972E93aD"
+address2 = "0x26eF4E04ac189970b27314da91993a87C1e6245D"
 
 
 def get_balance(w3, address):
