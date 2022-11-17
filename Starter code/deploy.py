@@ -1,6 +1,12 @@
+import os
 import json
 from web3 import Web3
 from solcx import compile_standard, install_solc
+import dotenv
+
+dotenv_file = dotenv.find_dotenv()
+dotenv.load_dotenv(dotenv_file)
+
 
 # Install Solidity compiler.
 _solc_version = "0.8.17"
@@ -39,8 +45,8 @@ with open("coinflip_abi.json", "w") as file:
 # For connecting to ganache
 w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:7545"))
 chain_id = 1337
-address = "0x2fF85d6C07669A511d6d87F99a02D98921aC174C"
-private_key = "de903f853697caf9395ce24acfbbdb7ae4bcf912e1946762f4080fa5e3c5355f" 
+address = "0x954510eC2BA516356B56781e0698a55BB1eDD493"
+private_key = "5ec2ad9110f2a69ea0c5bb0a9aec08c3868175841fcd82b0917c9d8b9634062c" 
 
 # Create the contract in Python
 coinflip_contract = w3.eth.contract(abi=abi, bytecode=bytecode)
@@ -67,3 +73,7 @@ transaction_hash = w3.eth.send_raw_transaction(sign_transaction.rawTransaction)
 print("Waiting for transaction to finish...")
 transaction_receipt = w3.eth.wait_for_transaction_receipt(transaction_hash)
 print(f"Done! Contract deployed to {transaction_receipt.contractAddress}")
+
+# Updates current .env file with new contract address
+os.environ['CURRENT_CONTRACT_ADDRESS'] = transaction_receipt.contractAddress
+dotenv.set_key(dotenv_file, 'CURRENT_CONTRACT_ADDRESS', os.environ['CURRENT_CONTRACT_ADDRESS'])

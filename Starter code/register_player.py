@@ -23,6 +23,6 @@ contract = w3.eth.contract(
 
 accounts = w3.eth.accounts
 
-contract.functions.register().transact({"from": w3.eth.accounts[0], "value": 10000000000000000000, "gasPrice": w3.eth.gas_price,})
+contract.functions.register().transact({"from": w3.eth.accounts[2], "value": 10000000000000000000, "gasPrice": w3.eth.gas_price,})
 
 print('it ran!')
