@@ -12,7 +12,7 @@ dotenv.load_dotenv(dotenv_file)
 _solc_version = "0.8.17"
 install_solc(_solc_version)
 
-with open("test_game.sol", "r") as file:
+with open("Group Projects/Group Project # 3_Rock_Paper_scissors/Starter code", "r") as file:
     test_game_file = file.read()
 
 compiled_sol = compile_standard(
