@@ -43,4 +43,4 @@ def get_balance(w3, address):
 
 #contract.functions.playerChoice().transact({"from": w3.eth.accounts[0], "data" : 1,  "gasPrice": w3.eth.gas_price,})
 
-contract.functions.playerChooses(2).transact({"from": w3.eth.accounts[2], "gasPrice" : w3.eth.gas_price,})
+contract.functions.playerChooses(2).transact({"from": w3.eth.accounts[1], "gasPrice" : w3.eth.gas_price,})
