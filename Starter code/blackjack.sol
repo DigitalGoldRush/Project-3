@@ -248,12 +248,6 @@ contract BlackJack {
 
     }
 
-    modifier gameNotStarted() {
-
-        require(gameInProgress == 0, "Game is in progress already");
-        _;
-
-    }
 
     function deal() public mutex {
 
@@ -262,6 +256,7 @@ contract BlackJack {
         playerBusted = 0;
         dealerBusted = 0;
         playerStands = 0;
+        dealerStands = 0;
         finalDealerCount = 0;
         finalPlayerCount = 0;
         playerHandValue[1][0] = 0;
@@ -295,30 +290,30 @@ contract BlackJack {
         evaluateDealerHand();
         evaluatePlayerHand();
 
+        if (playerHandValue[1][1] == 21) {
+
+            playerHasBlackJack();
+        }
+        
 
     }
 
-
-    modifier gameStarted() {
-
+    modifier _gameInProgress() {
         require(gameInProgress == 1, "Game must be in progress");
         _;
-
     }
 
     modifier _playerBusted() {
-
         require(playerBusted == 0, "You've already busted");
         _;
-
     }
 
-    function hitPlayer() public gameStarted() _playerBusted() didPlayerStand() {
+    function hitPlayer() public _gameInProgress() _playerBusted() didPlayerStand() {
         
         uint index = numCardsInArray(playersCards);
         getCards(1);
         
-        for (uint256 i = 0; i < index; i++) {
+        for (uint256 i = 1; i <= index; i++) {
             while ((playersCards[i][0] == dealtCards[1][0]) || (dealersCards[i][0] == dealtCards[1][0])) {
 	            if ((playersCards[i][1] == dealtCards[1][1]) || (dealersCards[i][1] == dealtCards[1][1])) {
                     getCards(1);
@@ -338,7 +333,7 @@ contract BlackJack {
         uint index = numCardsInArray(dealersCards);
         getCards(1);
     
-        for (uint256 i = 0; i < index; i++) {
+        for (uint256 i = 1; i <= index; i++) {
             while ((playersCards[i][0] == dealtCards[1][0]) || (dealersCards[i][0] == dealtCards[1][0])) {
 	            if ((playersCards[i][1] == dealtCards[1][1]) || (dealersCards[i][1] == dealtCards[1][1])) {
                     getCards(1);
@@ -442,21 +437,28 @@ contract BlackJack {
     function evaluateDealerHand() internal {
 
         if ((dealerHandValue[1][0] > 21) && (dealerHandValue[1][1] > 21)) {
-
             dealerBusted = 1;
             gameInProgress = 0;
-            
             if (dealerHandValue[1][0] <= dealerHandValue[1][1]) {
-
                 finalDealerCount = dealerHandValue[1][0];
             }
-            
             if (dealerHandValue[1][0] > dealerHandValue[1][1]) {
-
                 finalDealerCount = dealerHandValue[1][1];
             }
-
-
+        }
+        if ((dealerHandValue[1][0] <= 21) && (dealerHandValue[1][1] > 21)) {
+            finalDealerCount = dealerHandValue[1][0];
+        }
+        if ((dealerHandValue[1][0] > 21) && (playerHandValue[1][1] <= 21)) {
+            finalDealerCount = dealerHandValue[1][1];
+        }
+        if ((dealerHandValue[1][0] <= 21) && (dealerHandValue[1][1] <= 21)) {
+            if (dealerHandValue[1][0] > dealerHandValue[1][1]) {
+                 finalDealerCount = dealerHandValue[1][0];
+            }
+            if (dealerHandValue[1][0] <= dealerHandValue[1][1]) {
+                finalDealerCount = dealerHandValue[1][1];
+            }
         }
     }
 
@@ -473,6 +475,20 @@ contract BlackJack {
 
     }
 
+
+    modifier didDealerStand() {
+
+        require(dealerStands == 0, "Dealer has already stood");
+        _;
+    }
+
+    function dealerStand() public didDealerStand() {
+
+        dealerStands = 1;
+        evaluateDealerHand();
+        gameInProgress = 0;
+
+    }
     function replaceDuplicates(uint[2][4] memory array) public returns (uint[2][4] memory) {
 
 
@@ -496,6 +512,10 @@ contract BlackJack {
 
     }
 
+    function playerHasBlackJack() internal {
 
+        gameInProgress = 0;
+        
+    }
 
 }

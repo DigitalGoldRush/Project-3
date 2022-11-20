@@ -103,6 +103,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "dealerStand",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "dealerStands",
 				"outputs": [
 					{
@@ -438,10 +445,10 @@
 			]
 		},
 		"Project-3/Starter code/blackjack.sol": {
-			"keccak256": "0xceb66e76ec1f08aff17cd7ef9b6e68e7309c1c597b71cf25c423e5d231346471",
+			"keccak256": "0x644e4ef4e83ff45cdb63f70e56831e6059dd4856bbf11ff77982a88144d16570",
 			"urls": [
-				"bzz-raw://838fe41ca9bd65f9cc978a71ed3fec98670a26f3b367957b5d6d5f9de8940a64",
-				"dweb:/ipfs/QmQQ84wJf7fZYw8LG1pQyBA5rjT2kCzJAcbW8EFEYsMo2R"
+				"bzz-raw://4471dd74112008f6c4ab9f653684d9af6058fc3659474820460b45a8bc2ac826",
+				"dweb:/ipfs/QmXyf3W7hWeWm4SXohKonwhNKu6XsepdRBvKGjm67XsKRP"
 			]
 		}
 	},
