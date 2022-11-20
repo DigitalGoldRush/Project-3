@@ -250,7 +250,8 @@ contract BlackJack {
 
 
     function deal() public mutex {
-
+        
+        //Reset the state variables for new hand
         gameInProgress = 1;
         playerStands = 0;
         playerBusted = 0;
@@ -261,8 +262,9 @@ contract BlackJack {
         finalPlayerCount = 0;
         playerHandValue[1][0] = 0;
         playerHandValue[1][1] = 0;
-        
-        for (uint256 i = 1; i < 16; i++) {
+
+        //Everything in this FOR statement resets all the player and dealer cards to 0
+        for (uint256 i = 1; i < 16; i++) {  
             
             playersCards[i][0] = 0;
             playersCards[i][1] = 0;
@@ -280,17 +282,17 @@ contract BlackJack {
 
 
 
-        getCards(3);
-        dealtCards = replaceDuplicates(dealtCards);
+        getCards(3);   //Only first deal gets 3 cards  --  2 for player and 1 (up card) for dealer
+        dealtCards = replaceDuplicates(dealtCards);  //Scans the frist 3 dealt cards for duplicates and redraws cards if any two cards are exactly the same (rank and suit).
         pushToPlayer(dealtCards[1][0], dealtCards[1][1], 1);
         pushToDealer(dealtCards[2][0], dealtCards[2][1], 1);
         pushToPlayer(dealtCards[3][0], dealtCards[3][1], 2);
         sumPlayersCards();
         sumDealersCards();
-        evaluateDealerHand();
-        evaluatePlayerHand();
+        evaluateDealerHand();  
+        evaluatePlayerHand();  
 
-        if (playerHandValue[1][1] == 21) {
+        if (playerHandValue[1][1] == 21) {   // Evaluates if player is dealt blackjack.  If TRUE, game is ended.
 
             playerHasBlackJack();
         }
@@ -308,6 +310,7 @@ contract BlackJack {
         _;
     }
 
+    //Function to draw one card for the player.  Evaluates the new hand.
     function hitPlayer() public _gameInProgress() _playerBusted() didPlayerStand() {
         
         uint index = numCardsInArray(playersCards);
@@ -327,7 +330,7 @@ contract BlackJack {
 
     }
 
-
+    //Function to draw one card for the dealer.  Evaluates the new hand.
     function hitDealer() public {
         
         uint index = numCardsInArray(dealersCards);
@@ -347,7 +350,7 @@ contract BlackJack {
 
     }  
 
-
+    //Counts the players hand value.  Creates [i][0] where aces are 1 and [i][1] where aces are 11.
     function sumPlayersCards() internal {
 
         uint result = 0;
@@ -377,6 +380,7 @@ contract BlackJack {
         }
     }
 
+    //Counts the dealers hand value.  Creates [i][0] where aces are 1 and [i][1] where aces are 11.
     function sumDealersCards() internal {
 
         uint result = 0;
