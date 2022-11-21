@@ -82,14 +82,32 @@ st.write(get_contract_variables())
 st.title('Coinflip')
 st.write('Choose heads or tails. If you win, you get double your bet. If you lose, you lose your bet. Good luck!')
 
+st.write(get_contract_variables())
+
+register_player(house)
+register_player(player)
+
 st.write('Please select your bet amount in ether.')
 st.write('The minimum bet is 1 and the maximum bet is 100')
-bet_amount = st.number_input('Bet Amount', value=0, step=1)
+bet_amount = st.number_input('Bet Amount', value=0, step=0.1)
+
+st.write('Please select heads or tails.')
+choice = st.selectbox('Heads or Tails', ('Heads', 'Tails'))
+bet_choice = st.selectbox('Bet Choice', options=['Heads', 'Tails'])
+
+player_choice(player, 1)
+get_outcome(player)
+
+
+st.write(get_contract_variables())
+
+reset_contract()
+
+st.write(get_contract_variables())
+
 
 bet_min = contract.functions.BET_MIN().call()
 bet_max = contract.functions.BET_MAX().call()
-
-
 
 
 if bet_amount < bet_min:
@@ -97,34 +115,39 @@ if bet_amount < bet_min:
 elif bet_amount > bet_max:
     st.write('Bet amount is too high. Please bet at most 100 ether.')
 else:
-    st.write('Please select heads or tails.')
-    bet_choice = st.selectbox('Bet Choice', options=['Heads', 'Tails'])
-    if st.button('Place Bet'):
-        if bet_choice == 'Heads':
-            bet_choice = 0
-        else:
-            bet_choice = 1
-        contract.functions.initialBet(bet_choice).transact({"from": w3.eth.accounts[0], "gasPrice": w3.eth.gas_price, "value": w3.toWei(bet_amount, "ether")})  
-        st.write('Bet placed. Please wait for the result.')
-        st.write('The result is: ', contract.functions.result().call())
-        st.write('The winning side is: ', contract.functions.winningSide().call())
-        st.write('The winning amount is: ', contract.functions.winningAmount().call())
-        st.write('The losing amount is: ', contract.functions.losingAmount().call())
-        st.write('The contract balance is: ', contract.functions.getContractBalance().call())
+    if bet_choice == 'Heads':
+        bet_choice = 0
+    else:bet_choice = 1
+    contract.functions.initialBet(bet_choice).transact({"from": w3.eth.accounts[0], "gasPrice": w3.eth.gas_price, "value": w3.toWei(bet_amount, "ether")})  
+    st.write('Bet placed. Please wait for the result.')
+    st.write('The result is: ', contract.functions.result().call())
+    st.write('The winning side is: ', contract.functions.winningSide().call())
+    st.write('The winning amount is: ', contract.functions.winningAmount().call())
+    st.write('The losing amount is: ', contract.functions.losingAmount().call())
+    st.write('The contract balance is: ', contract.functions.getContractBalance().call())
     
+    #print('------------------------------')
+    #print('The result is: ', contract.functions.result().call())
+    #print('The winning side is: ', contract.functions.winningSide().call())
+    #print('The winning amount is: ', contract.functions.winningAmount().call())
+    #print('The losing amount is: ', contract.functions.losingAmount().call())
+    #print('The contract balance is: ', contract.functions.getContractBalance().call())
+    #print('------------------------------')
 
-print('------------------------------')
+#print(f'minimum bet: {bet_min}')
+#print(f'maximum bet: {bet_max}')
+#print(f'initial bet: {initial_bet}')
+#print(f'contract balance: {contract_balance}')
+#print(f'house played status: {house_played}')
+#print(f'player played status: {player_played}')
+#print(f'player choice: {player_choice}')
+#print(f'random number: {random_number}')
+#print(f'outcome : {outcome}')
+#print(f'winner was paid: {paid}')
 
-print(f'minimum bet: {bet_min}')
-print(f'maximum bet: {bet_max}')
-print(f'initial bet: {initial_bet}')
-print(f'contract balance: {contract_balance}')
-print(f'house played status: {house_played}')
-print(f'player played status: {player_played}')
-print(f'player choice: {player_choice}')
-print(f'random number: {random_number}')
-print(f'outcome : {outcome}')
-print(f'winner was paid: {paid}')
+
+
+
 
 
 
