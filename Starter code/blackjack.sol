@@ -7,7 +7,7 @@ contract BlackJack {
     bool internal locked;
     uint public gameInProgress          = 0;
     uint constant public BET_MIN        = 1 wei;    // The minimum bet
-    uint constant public BET_MAX        = 10 ether;
+    uint constant public BET_MAX        = 1 ether; // The maximum bet
     uint public houseBalance            = 0;
     uint public playerBalance           = 0;
     uint public betAmount               = 0;
@@ -16,22 +16,18 @@ contract BlackJack {
     uint rank                           = 0;
     uint[2][16] public playersCards;
     uint[2][16] public dealersCards;
-    uint[2][4] public dealtCards;
+    uint[2][2] public playerHandValue;
+    uint[2][2] public dealerHandValue;
+    uint[2][4] dealtCards;
     uint public playerCardCount         = 0;
     uint public dealerCardCount         = 0;
     uint public playerBusted            = 0;
     uint public dealerBusted            = 0;
-    uint[2][2] public playerHandValue;
-    uint[2][2] public dealerHandValue;
     uint public finalPlayerCount        = 0;
     uint public finalDealerCount        = 0;
     uint public playerStands            = 0;
     uint public dealerStands            = 0;
 
-
-    string ranNumAsString = "";
-    string slicedString = "";
-    uint ranNumStringLength;
     uint nonce = 0;
             
     // Players' addresses
@@ -62,7 +58,6 @@ contract BlackJack {
     }
 
     // Global mutex modifier
-
     modifier mutex() { //To prevent reentrancy attacks
 
         require(!locked, "Reentrancy not allowed");
@@ -72,7 +67,7 @@ contract BlackJack {
 
     }
 
-
+    // Returns a pseudorandom number from 0 to the largest integer allowed in Solidity
     function getRandom() internal returns(uint) {
         // increase nonce
         nonce++; 
@@ -82,7 +77,6 @@ contract BlackJack {
     }
  
     // Player registration function
-
     modifier validPlayer(uint house_or_player) {
 
         require(houseWallet == address(0x0) || playerWallet == address(0x0) || msg.sender == houseWallet || msg.sender == playerWallet, "Registration address is not valid");
@@ -91,6 +85,7 @@ contract BlackJack {
 
     }
     
+    //Add ethereum to the contract
     function fundContract(uint house_or_player) public payable validPlayer(house_or_player) {
         
             
@@ -109,8 +104,7 @@ contract BlackJack {
         }
     }
 
-    // Player Withdrawal Function
-
+    //Player withdraw money function.  Player can withdraw all funds at any time, except fund already bet in a game in progress
     modifier canPlayerWithdraw(uint amount) {
 
         require(playerBalance > 0, "Player has no balance to withdraw");
@@ -152,10 +146,15 @@ contract BlackJack {
     }
 
     function getCards(uint numCards) internal {
-        
-        uint i = 1;
 
-        while (i <= numCards) {
+        string memory ranNumAsString = "";
+        string memory slicedString = "";
+        uint ranNumStringLength;
+        uint j = 1;
+        uint cardInt = 0;
+
+
+        while (j <= numCards) {
 
             uint start = 3;
             uint end = 4;
@@ -165,15 +164,15 @@ contract BlackJack {
             randomNum = getRandom();
             ranNumAsString = Strings.toString(randomNum);
             slicedString = getSlice(start, end, ranNumAsString);
-            randomNum = stringToUint(slicedString);
+            cardInt = stringToUint(slicedString);
             ranNumStringLength = bytes(ranNumAsString).length;
 
-            while (randomNum < 1 || randomNum > 13) {
+            while ((cardInt < 1 || cardInt > 13) && (start < (ranNumStringLength - 3))) {
 
                 start = start + 2;
                 end = end + 2;
                 slicedString = getSlice(start, end, ranNumAsString);
-                randomNum = stringToUint(slicedString);
+                cardInt = stringToUint(slicedString);
 
                 if (start > (ranNumStringLength - 3)) {
             
@@ -182,33 +181,47 @@ contract BlackJack {
                     randomNum = getRandom();
                     ranNumAsString = Strings.toString(randomNum);
                     slicedString = getSlice(start, end, ranNumAsString);
-                    randomNum = stringToUint(slicedString);
+                    cardInt = stringToUint(slicedString);
                     ranNumStringLength = bytes(ranNumAsString).length;
             
                 }
             }
 
-            rank = randomNum;
+            rank = cardInt;
             start = start + 2;
             end = end + 2;
             slicedString = getSlice(start, end, ranNumAsString);
-            randomNum = stringToUint(slicedString);
+            cardInt = stringToUint(slicedString);
 
 
-            while (randomNum < 1 || randomNum > 4) {
+
+            while ((cardInt < 1 || cardInt > 4) && (start < (ranNumStringLength - 3))) {
 
                 start = start + 1;
                 end = start;
                 slicedString = getSlice(start, end, ranNumAsString);
-                randomNum = stringToUint(slicedString);
+                cardInt = stringToUint(slicedString);
 
+                if (start > (ranNumStringLength - 3)) {
+            
+                    start = 4;
+                    end = 4;
+                    randomNum = getRandom();
+                    ranNumAsString = Strings.toString(randomNum);
+                    slicedString = getSlice(start, end, ranNumAsString);
+                    cardInt = stringToUint(slicedString);
+                    ranNumStringLength = bytes(ranNumAsString).length;
+                }
             }
-        
-            suit = randomNum;  
+            
 
-            dealtCards[i][0] = rank;
-            dealtCards[i][1] = suit;
-            i = i + 1;
+
+
+            suit = cardInt;  
+
+            dealtCards[j][0] = rank;
+            dealtCards[j][1] = suit;
+            j = j + 1;
 
         }
     }       
@@ -264,7 +277,7 @@ contract BlackJack {
         playerHandValue[1][1] = 0;
 
         //Everything in this FOR statement resets all the player and dealer cards to 0
-        for (uint256 i = 1; i < 16; i++) {  
+        for (uint256 i = 1; i <= 15; i++) {  
             
             playersCards[i][0] = 0;
             playersCards[i][1] = 0;
@@ -316,31 +329,45 @@ contract BlackJack {
         uint index = numCardsInArray(playersCards);
         getCards(1);
         
-        for (uint256 i = 1; i <= index; i++) {
-            while ((playersCards[i][0] == dealtCards[1][0]) || (dealersCards[i][0] == dealtCards[1][0])) {
-	            if ((playersCards[i][1] == dealtCards[1][1]) || (dealersCards[i][1] == dealtCards[1][1])) {
+        for (uint256 i = 1; i <= 11; i++) {
+
+            while (((playersCards[i][0] == dealtCards[1][0])  &&  (playersCards[i][0] == dealtCards[1][1])) || ((dealersCards[i][0] == dealtCards[1][0]) && (dealersCards[i][1] == dealtCards[1][1]))) {
+
                     getCards(1);
-                }
+
             }
-        }    
+        }     
     
         pushToPlayer(dealtCards[1][0], dealtCards[1][1], (index + 1));
         sumPlayersCards();
         evaluatePlayerHand();
 
     }
-
+    
+    
     //Function to draw one card for the dealer.  Evaluates the new hand.
-    function hitDealer() public {
+    modifier dealerMustStay() {
+        require(finalDealerCount < 17, "Dealer must stand on 17 and higher");
+        _;
+    }
+
+    modifier playerBustedOrStood () {
+
+        require((playerBusted == 1) || (playerStands == 1));
+        _;
+    }
+
+    function hitDealer() internal dealerMustStay() playerBustedOrStood() {
         
         uint index = numCardsInArray(dealersCards);
         getCards(1);
     
-        for (uint256 i = 1; i <= index; i++) {
-            while ((playersCards[i][0] == dealtCards[1][0]) || (dealersCards[i][0] == dealtCards[1][0])) {
-	            if ((playersCards[i][1] == dealtCards[1][1]) || (dealersCards[i][1] == dealtCards[1][1])) {
+        for (uint256 i = 1; i <= 11; i++) {
+
+            while (((playersCards[i][0] == dealtCards[1][0])  &&  (playersCards[i][0] == dealtCards[1][1])) || ((dealersCards[i][0] == dealtCards[1][0]) && (dealersCards[i][1] == dealtCards[1][1]))) {
+
                     getCards(1);
-                }
+
             }
         }    
     
@@ -464,6 +491,21 @@ contract BlackJack {
                 finalDealerCount = dealerHandValue[1][1];
             }
         }
+        if ((dealerHandValue[1][0] > 16) || (dealerHandValue[1][1] > 16)) {
+
+            gameInProgress = 0;
+
+            if ((dealerHandValue[1][0] > 21) && (dealerHandValue[1][1] > 21)) {
+
+                dealerBusted = 1;
+            }
+
+            else {
+
+                dealerStands = 1;
+
+            }
+        }
     }
 
     modifier didPlayerStand() {
@@ -472,7 +514,7 @@ contract BlackJack {
         _;
     }
 
-    function playerStand() public didPlayerStand() {
+    function playerStand() public didPlayerStand() _playerBusted() _gameInProgress() {
 
         playerStands = 1;
         evaluatePlayerHand();
@@ -486,14 +528,15 @@ contract BlackJack {
         _;
     }
 
-    function dealerStand() public didDealerStand() {
+    function dealerStand() internal didDealerStand() {
 
+        gameInProgress = 0;
         dealerStands = 1;
         evaluateDealerHand();
-        gameInProgress = 0;
 
     }
-    function replaceDuplicates(uint[2][4] memory array) public returns (uint[2][4] memory) {
+
+    function replaceDuplicates(uint[2][4] memory array) internal returns (uint[2][4] memory) {
 
 
         while ((array[1][0] == array[2][0]) && (array[1][1] == array[2][1])) {
@@ -519,7 +562,35 @@ contract BlackJack {
     function playerHasBlackJack() internal {
 
         gameInProgress = 0;
-        
-    }
 
+        if (dealersCards[1][0] == 1) {
+
+            getCards(1);
+            for (uint256 i = 1; i <= 1; i++) {
+            while ((playersCards[i][0] == dealtCards[1][0]) || (dealersCards[i][0] == dealtCards[1][0])) {
+	            if ((playersCards[i][1] == dealtCards[1][1]) || (dealersCards[i][1] == dealtCards[1][1])) {
+                    getCards(1);
+                }
+            }
+            }
+
+            pushToDealer(dealtCards[1][0], dealtCards[1][1], 2);
+            sumDealersCards();
+            evaluateDealerHand();
+
+            if (dealerHandValue[1][1] == 21) {
+
+                gameIsPushed();
+
+            }
+            
+
+        }    
+    }
+    
+
+    function gameIsPushed() internal {
+
+        gameInProgress = 0;
+    }
 }

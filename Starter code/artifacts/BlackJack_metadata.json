@@ -103,13 +103,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "dealerStand",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "dealerStands",
 				"outputs": [
 					{
@@ -135,30 +128,6 @@
 					}
 				],
 				"name": "dealersCards",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "dealtCards",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -219,13 +188,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "hitDealer",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -380,25 +342,6 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256[2][4]",
-						"name": "array",
-						"type": "uint256[2][4]"
-					}
-				],
-				"name": "replaceDuplicates",
-				"outputs": [
-					{
-						"internalType": "uint256[2][4]",
-						"name": "",
-						"type": "uint256[2][4]"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -445,10 +388,10 @@
 			]
 		},
 		"Project-3/Starter code/blackjack.sol": {
-			"keccak256": "0x644e4ef4e83ff45cdb63f70e56831e6059dd4856bbf11ff77982a88144d16570",
+			"keccak256": "0x374ea79cc97b624a794387597871ed2c7381bdf2cc9a277c8051faf30ffe6100",
 			"urls": [
-				"bzz-raw://4471dd74112008f6c4ab9f653684d9af6058fc3659474820460b45a8bc2ac826",
-				"dweb:/ipfs/QmXyf3W7hWeWm4SXohKonwhNKu6XsepdRBvKGjm67XsKRP"
+				"bzz-raw://c25f653d25571a97f746dd2f971b62520b09e53ef97f792329547b67edf38851",
+				"dweb:/ipfs/QmPS1MgNjjW96MrogYcYLKLcQvXGyzw28KYU3QAZCVffWb"
 			]
 		}
 	},
