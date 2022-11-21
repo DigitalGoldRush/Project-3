@@ -655,10 +655,41 @@ contract BlackJack {
     }
     
 
+
+    
     function gameIsPushed() internal {
 
         playerBalance = playerBalance + betAmount;
         betAmount = 0;
 
     }
+
+
+    modifier _playerHasFunds() {
+
+        require(playerBalance >= (betAmount * 2), "You don't have enough funds.");
+        _;
+
+    }
+    
+    modifier _playerFirstAction() {
+
+        require(playerCardCount == 2, "You can only double down on first action");
+        _;
+
+    }
+
+    function doubleDown() public _gameInProgress() _playerFirstAction() _playerHasFunds {
+
+        playerBalance = playerBalance - betAmount;
+        betAmount = betAmount * 2;
+
+        hitPlayer();
+        playerStand();
+
+    }
+
+
+
+// End Contract    
 }
