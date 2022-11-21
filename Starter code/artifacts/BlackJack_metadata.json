@@ -414,7 +414,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Project-3/Starter code/blackjack.sol": "BlackJack"
+			"Group Projects/Group Project # 3_Rock_Paper_scissors/Starter code/blackjack.sol": "BlackJack"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -444,11 +444,11 @@
 				"dweb:/ipfs/Qmct36zWXv3j7LZB83uwbg7TXwnZSN1fqHNDZ93GG98bGz"
 			]
 		},
-		"Project-3/Starter code/blackjack.sol": {
-			"keccak256": "0x644e4ef4e83ff45cdb63f70e56831e6059dd4856bbf11ff77982a88144d16570",
+		"Group Projects/Group Project # 3_Rock_Paper_scissors/Starter code/blackjack.sol": {
+			"keccak256": "0x5ccadbc62fa9d233d743235c6c7abc15815ab634374763401d5253602e09ee88",
 			"urls": [
-				"bzz-raw://4471dd74112008f6c4ab9f653684d9af6058fc3659474820460b45a8bc2ac826",
-				"dweb:/ipfs/QmXyf3W7hWeWm4SXohKonwhNKu6XsepdRBvKGjm67XsKRP"
+				"bzz-raw://56e9733921f50c9fb18731b5005af26fd513a6ccd386c6410c6e2a0fa65755fb",
+				"dweb:/ipfs/QmQ1raWkFs3rhJvV6T5FyPPxefnDTZx8XoGTuHNJkhhFfb"
 			]
 		}
 	},

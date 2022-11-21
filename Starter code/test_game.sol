@@ -90,7 +90,7 @@ contract CoinFlip {
 
     modifier has_player_played {
         
-        require(playerChoice > 0);
+        require(playerChoice > 0, "Player has to play before you can get outcome");
         _;
     }
 

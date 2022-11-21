@@ -4,6 +4,7 @@ from web3 import Web3
 from solcx import compile_standard, install_solc
 import dotenv
 
+os.chdir('/Users/michaeldionne/Documents/GitHub/Group Projects/Group Project # 3_Rock_Paper_scissors/Starter code/')
 dotenv_file = dotenv.find_dotenv()
 dotenv.load_dotenv(dotenv_file)
 
@@ -12,7 +13,7 @@ dotenv.load_dotenv(dotenv_file)
 _solc_version = "0.8.17"
 install_solc(_solc_version)
 
-with open("Group Projects/Group Project # 3_Rock_Paper_scissors/Starter code", "r") as file:
+with open("test_game.sol", "r") as file:
     test_game_file = file.read()
 
 compiled_sol = compile_standard(
@@ -45,8 +46,8 @@ with open("coinflip_abi.json", "w") as file:
 # For connecting to ganache
 w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:7545"))
 chain_id = 1337
-address = "0x954510eC2BA516356B56781e0698a55BB1eDD493"
-private_key = "5ec2ad9110f2a69ea0c5bb0a9aec08c3868175841fcd82b0917c9d8b9634062c" 
+address = "0x8344A30Ac4f855F361AAE8B7C9e56f57A63661e1"
+private_key = "43e7d326ddba395aa6d6738b526cdf3c44b7ad3a1cbc780ca5320802df4e2159" 
 
 # Create the contract in Python
 coinflip_contract = w3.eth.contract(abi=abi, bytecode=bytecode)
