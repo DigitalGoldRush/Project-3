@@ -11,7 +11,6 @@ contract BlackJack {
     uint public houseBalance            = 0;
     uint public playerBalance           = 0;
     uint public betAmount               = 0;
-    uint public cumulativeBetAmount     = 0;
     uint randomNum                      = 0;
     uint suit                           = 0;
     uint rank                           = 0;
@@ -153,23 +152,6 @@ contract BlackJack {
 
     }
 
-    function payout (uint house_or_player) internal mutex() _gameNotInProgress() {
-
-        if (house_or_player == 0) {
-
-            houseBalance = houseBalance + (betAmount * 2);     
-
-        }
-
-        if (house_or_player == 1) {
-
-            playerBalance = playerBalance + (betAmount * 2);
-            houseBalance = houseBalance - (betAmount * 2);
-
-        }
-
-
-    }
 
     //Get numCards amount of cards
     function getCards(uint numCards) internal {
@@ -567,7 +549,7 @@ contract BlackJack {
         if (finalPlayerCount > finalDealerCount) {
 
             playerBalance = playerBalance + (betAmount * 2);
-            houseBalance = houseBalance - (betAmount * 2);
+            houseBalance = houseBalance - betAmount;
             betAmount = 0;
         }
 
@@ -619,7 +601,7 @@ contract BlackJack {
         while ((array[1][0] == array[2][0]) && (array[1][1] == array[2][1])) {
 
             getCards(1);
-            array[1][0] = dealtCards[2][0];
+            array[2][0] = dealtCards[1][0];
             array[2][1] = dealtCards[1][1];
                 
         }
