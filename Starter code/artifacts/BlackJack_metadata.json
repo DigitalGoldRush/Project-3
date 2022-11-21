@@ -46,6 +46,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "cumulativeBetAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "deal",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -192,6 +205,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "hitDealer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "hitPlayer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -220,7 +240,7 @@
 				],
 				"name": "placeBet",
 				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -388,10 +408,10 @@
 			]
 		},
 		"Project-3/Starter code/blackjack.sol": {
-			"keccak256": "0x374ea79cc97b624a794387597871ed2c7381bdf2cc9a277c8051faf30ffe6100",
+			"keccak256": "0x21e60ff50e0293ccd0387cd694f4960ba677d7595c3aac020abc3ab310b8a606",
 			"urls": [
-				"bzz-raw://c25f653d25571a97f746dd2f971b62520b09e53ef97f792329547b67edf38851",
-				"dweb:/ipfs/QmPS1MgNjjW96MrogYcYLKLcQvXGyzw28KYU3QAZCVffWb"
+				"bzz-raw://4a9d02e5bd70c82bc072ec4f86797f035bb96b7e823b028fe3bdcd501e3b5b34",
+				"dweb:/ipfs/QmTkYTnEEmsv3J6Uy29THPpYqyRhuZFpdEche53gCanrij"
 			]
 		}
 	},

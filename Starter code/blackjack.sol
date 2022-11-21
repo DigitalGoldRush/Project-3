@@ -11,6 +11,7 @@ contract BlackJack {
     uint public houseBalance            = 0;
     uint public playerBalance           = 0;
     uint public betAmount               = 0;
+    uint public cumulativeBetAmount     = 0;
     uint randomNum                      = 0;
     uint suit                           = 0;
     uint rank                           = 0;
@@ -131,20 +132,46 @@ contract BlackJack {
 
     modifier validBet(uint _betAmount) {
    
-        require(msg.value >= BET_MIN && msg.value <= BET_MAX);
-        require(betAmount <= playerBalance, "Bet amount is more than game balance");
+        require(_betAmount >= BET_MIN && _betAmount <= BET_MAX);
+        require(_betAmount <= playerBalance, "Bet amount is more than player balance");
         require(msg.sender == playerWallet, "Only player can place bet");
+        require(betAmount == 0, "Bet has already been placed");
         _;
 
     }
 
-    function placeBet(uint _betAmount) public payable validBet(betAmount) mutex() {
+    modifier _gameNotInProgress {
+
+        require(gameInProgress == 0, "You cannot bet while game is in progress");
+        _;
+    }
+
+    function placeBet(uint _betAmount) public validBet(_betAmount) mutex() {
 
         playerBalance = playerBalance - _betAmount;
         betAmount = _betAmount;
 
     }
 
+    function payout (uint house_or_player) internal mutex() _gameNotInProgress() {
+
+        if (house_or_player == 0) {
+
+            houseBalance = houseBalance + (betAmount * 2);     
+
+        }
+
+        if (house_or_player == 1) {
+
+            playerBalance = playerBalance + (betAmount * 2);
+            houseBalance = houseBalance - (betAmount * 2);
+
+        }
+
+
+    }
+
+    //Get numCards amount of cards
     function getCards(uint numCards) internal {
 
         string memory ranNumAsString = "";
@@ -261,8 +288,13 @@ contract BlackJack {
 
     }
 
+    modifier playerHasBet() {
 
-    function deal() public mutex {
+        require(betAmount > 0, "you must bet before the cards are dealt");
+        _;
+    }
+
+    function deal() public mutex() playerHasBet {
         
         //Reset the state variables for new hand
         gameInProgress = 1;
@@ -357,7 +389,7 @@ contract BlackJack {
         _;
     }
 
-    function hitDealer() internal dealerMustStay() playerBustedOrStood() {
+    function hitDealer() public dealerMustStay() playerBustedOrStood() {
         
         uint index = numCardsInArray(dealersCards);
         getCards(1);
@@ -439,15 +471,23 @@ contract BlackJack {
 
     function evaluatePlayerHand() internal {
 
+
+
         if ((playerHandValue[1][0] > 21) && (playerHandValue[1][1] > 21)) {
+
             playerBusted = 1;
             gameInProgress = 0;
+
             if (playerHandValue[1][0] <= playerHandValue[1][1]) {
                 finalPlayerCount = playerHandValue[1][0];
             }
             if (playerHandValue[1][0] > playerHandValue[1][1]) {
                 finalPlayerCount = playerHandValue[1][1];
             }
+
+            houseBalance = houseBalance + betAmount;
+            betAmount = 0;
+
         }
         if ((playerHandValue[1][0] <= 21) && (playerHandValue[1][1] > 21)) {
             finalPlayerCount = playerHandValue[1][0];
@@ -467,16 +507,7 @@ contract BlackJack {
 
     function evaluateDealerHand() internal {
 
-        if ((dealerHandValue[1][0] > 21) && (dealerHandValue[1][1] > 21)) {
-            dealerBusted = 1;
-            gameInProgress = 0;
-            if (dealerHandValue[1][0] <= dealerHandValue[1][1]) {
-                finalDealerCount = dealerHandValue[1][0];
-            }
-            if (dealerHandValue[1][0] > dealerHandValue[1][1]) {
-                finalDealerCount = dealerHandValue[1][1];
-            }
-        }
+
         if ((dealerHandValue[1][0] <= 21) && (dealerHandValue[1][1] > 21)) {
             finalDealerCount = dealerHandValue[1][0];
         }
@@ -484,6 +515,7 @@ contract BlackJack {
             finalDealerCount = dealerHandValue[1][1];
         }
         if ((dealerHandValue[1][0] <= 21) && (dealerHandValue[1][1] <= 21)) {
+            
             if (dealerHandValue[1][0] > dealerHandValue[1][1]) {
                  finalDealerCount = dealerHandValue[1][0];
             }
@@ -491,21 +523,60 @@ contract BlackJack {
                 finalDealerCount = dealerHandValue[1][1];
             }
         }
-        if ((dealerHandValue[1][0] > 16) || (dealerHandValue[1][1] > 16)) {
 
-            gameInProgress = 0;
+        if ((dealerHandValue[1][0] > 16) || (dealerHandValue[1][1] > 16)) {
 
             if ((dealerHandValue[1][0] > 21) && (dealerHandValue[1][1] > 21)) {
 
                 dealerBusted = 1;
+                gameInProgress = 0;
+
+                if (dealerHandValue[1][0] <= dealerHandValue[1][1]) {
+                finalDealerCount = dealerHandValue[1][0];
+                }
+                if (dealerHandValue[1][0] > dealerHandValue[1][1]) {
+                finalDealerCount = dealerHandValue[1][1];
+                }
+                if ((playerBusted == 0) && (playerStands == 1)) {
+                
+                    playerBalance = playerBalance + (betAmount * 2);
+                    houseBalance = houseBalance - betAmount;
+                    betAmount = 0;
+                }
             }
 
-            else {
+            if (dealerBusted != 1) {
 
+                gameInProgress = 0;
                 dealerStands = 1;
+                evaluateWinner();
 
             }
         }
+    }
+
+    function evaluateWinner() internal {
+
+        if (finalDealerCount > finalPlayerCount) {
+
+            houseBalance = houseBalance + betAmount;
+            betAmount = 0;
+
+        }
+
+        if (finalPlayerCount > finalDealerCount) {
+
+            playerBalance = playerBalance + (betAmount * 2);
+            houseBalance = houseBalance - (betAmount * 2);
+            betAmount = 0;
+        }
+
+        if (finalDealerCount == finalPlayerCount) {
+
+            gameIsPushed();
+
+        }
+
     }
 
     modifier didPlayerStand() {
@@ -518,6 +589,12 @@ contract BlackJack {
 
         playerStands = 1;
         evaluatePlayerHand();
+
+        while (gameInProgress == 1) {
+
+            hitDealer();
+
+        }
 
     }
 
@@ -563,7 +640,7 @@ contract BlackJack {
 
         gameInProgress = 0;
 
-        if (dealersCards[1][0] == 1) {
+        if ((dealersCards[1][0] == 1) || (dealerHandValue[1][0] == 10)) {
 
             getCards(1);
             for (uint256 i = 1; i <= 1; i++) {
@@ -583,7 +660,14 @@ contract BlackJack {
                 gameIsPushed();
 
             }
-            
+
+            else {
+
+                playerBalance = playerBalance + betAmount + ((betAmount * 3) / 2);
+                houseBalance = houseBalance - ((betAmount * 3) / 2);
+                betAmount = 0;
+
+            }  
 
         }    
     }
@@ -591,6 +675,8 @@ contract BlackJack {
 
     function gameIsPushed() internal {
 
-        gameInProgress = 0;
+        playerBalance = playerBalance + betAmount;
+        betAmount = 0;
+
     }
 }
