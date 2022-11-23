@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.17+commit.8df45f5f"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -402,10 +402,10 @@
 			]
 		},
 		"Project-3/Starter code/blackjack.sol": {
-			"keccak256": "0x991693c6347d6d5b96f5f7bd35487385109d12637cac57885aab6858738807b2",
+			"keccak256": "0x79ccad0c19e013a974116a85b4630ff5f22ec27a38371bde6cf505a18bb8a08c",
 			"urls": [
-				"bzz-raw://22f21ae1a8efca966e2c3428d663a3d2250c7200b9d447f04ff255454579c9d9",
-				"dweb:/ipfs/QmPZXikd8vvqW8LPFZMGBAEsT6tmsor5WY84wNqsLuuoS9"
+				"bzz-raw://27cd6568e37dc38d74760e08bd541232743e6ad4b2324e4c87a90004f4dddf00",
+				"dweb:/ipfs/QmStEDR57b56dM62Euvzd57wVnhJ97s3auC4HehuqXyCw1"
 			]
 		}
 	},

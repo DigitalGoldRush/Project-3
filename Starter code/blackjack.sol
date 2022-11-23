@@ -1,6 +1,7 @@
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "Strings.sol";
+//import "Strings.sol";
 
 contract BlackJack {
 
@@ -470,6 +471,12 @@ contract BlackJack {
             houseBalance = houseBalance + betAmount;
             betAmount = 0;
 
+            while (finalDealerCount < 17) {
+
+                hitDealer();
+
+            } 
+
         }
         if ((playerHandValue[1][0] <= 21) && (playerHandValue[1][1] > 21)) {
             finalPlayerCount = playerHandValue[1][0];
@@ -534,6 +541,8 @@ contract BlackJack {
                 evaluateWinner();
 
             }
+
+            
         }
     }
 
@@ -620,7 +629,6 @@ contract BlackJack {
 
     function playerHasBlackJack() internal {
 
-        gameInProgress = 0;
 
         if ((dealersCards[1][0] == 1) || (dealerHandValue[1][0] == 10)) {
 
@@ -643,7 +651,7 @@ contract BlackJack {
 
             }
 
-            else {
+            if (dealerHandValue[1][1] != 21) {
 
                 playerBalance = playerBalance + betAmount + ((betAmount * 3) / 2);
                 houseBalance = houseBalance - ((betAmount * 3) / 2);
