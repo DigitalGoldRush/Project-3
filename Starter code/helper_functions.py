@@ -1,6 +1,6 @@
 def get_card_image_string(card_rank = 0, card_suit = 0):
 
-    image_path = ''
+    image_path = 'images/Cards/8d.png'
 
     if (card_rank == 1)&(card_suit == 1): image_path = 'images/Cards/Ac.png'
     if (card_rank == 1)&(card_suit == 2): image_path = 'images/Cards/Ad.png'

@@ -199,6 +199,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "gameOutcome",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "hitDealer",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -385,7 +398,14 @@
 		"remappings": []
 	},
 	"sources": {
-		"@openzeppelin/contracts/utils/Strings.sol": {
+		"Project-3/Starter code/blackjack.sol": {
+			"keccak256": "0x630b1eb0a1833fa1911a4331d30b5059d4846fb44e0f1947a080380a2c42ef1a",
+			"urls": [
+				"bzz-raw://ec356a2ab5b1bb0aa2ef1ce87706fe1e23b771d05993267cc51f599c3d327d8a",
+				"dweb:/ipfs/QmbNcHoQvkCHyCwRvSHPpPfLakgCda3Jy5F8San9zSQDir"
+			]
+		},
+		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol": {
 			"keccak256": "0xa4d1d62251f8574deb032a35fc948386a9b4de74b812d4f545a1ac120486b48a",
 			"license": "MIT",
 			"urls": [
@@ -393,19 +413,12 @@
 				"dweb:/ipfs/QmVhVa6LGuzAcB8qgDtVHRkucn4ihj5UZr8xBLcJkP6ucb"
 			]
 		},
-		"@openzeppelin/contracts/utils/math/Math.sol": {
-			"keccak256": "0xa1e8e83cd0087785df04ac79fb395d9f3684caeaf973d9e2c71caef723a3a5d6",
+		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/Math.sol": {
+			"keccak256": "0x50d8442df21e003cffe241feead16ae1f817afb016e9caab96235d7017816fd8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://33bbf48cc069be677705037ba7520c22b1b622c23b33e1a71495f2d36549d40b",
-				"dweb:/ipfs/Qmct36zWXv3j7LZB83uwbg7TXwnZSN1fqHNDZ93GG98bGz"
-			]
-		},
-		"Project-3/Starter code/blackjack.sol": {
-			"keccak256": "0x79ccad0c19e013a974116a85b4630ff5f22ec27a38371bde6cf505a18bb8a08c",
-			"urls": [
-				"bzz-raw://27cd6568e37dc38d74760e08bd541232743e6ad4b2324e4c87a90004f4dddf00",
-				"dweb:/ipfs/QmStEDR57b56dM62Euvzd57wVnhJ97s3auC4HehuqXyCw1"
+				"bzz-raw://d079afcda8d243ca111f3471d5bb351b90d64806eb5e9704c414a2808ff02d44",
+				"dweb:/ipfs/QmeUcosk8rKGvV9yghc58fd2Te66D943JFBS5jD4mbUZaC"
 			]
 		}
 	},

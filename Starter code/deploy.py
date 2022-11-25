@@ -44,8 +44,8 @@ with open("blackjack_abi.json", "w") as file:
 
 w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:8545"))
 chain_id = 1337
-address = "0xCf4c1c95a0fABf0d98216741A35eFE7D2f84CaE2"
-private_key = "0x898f1caac0f7c9c407c2adfbf4991c91b4165ebcb972c8c83ccf6cf65aff9357" 
+address = "0xa8cea65a289DA148e0C8ce7b06B66d8389E776C2"
+private_key = "0xeba28f1457daa57bbe9a455ad1caeb1a3856c67f45ea4285eb473dbd15e0b33c" 
 
 # Create the contract in Python
 blackjack_contract = w3.eth.contract(abi=abi, bytecode=bytecode)
@@ -78,7 +78,7 @@ os.environ['CURRENT_CONTRACT_ADDRESS'] = transaction_receipt.contractAddress
 dotenv.set_key(dotenv_file, 'CURRENT_CONTRACT_ADDRESS', os.environ['CURRENT_CONTRACT_ADDRESS'])
 
 def register_player():
-    blackjack_contract.functions.fundContract(0).transact({'from': w3.eth.accounts[8], 'value': 50000000000000000000, 'gasPrice': w3.eth.gas_price,})
+    blackjack_contract.functions.fundContract(0).transact({'from': w3.eth.accounts[9], 'value': 10000000000000000000, 'gasPrice': w3.eth.gas_price,})
 
 
 def load_contract():

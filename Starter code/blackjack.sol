@@ -1,33 +1,39 @@
 pragma solidity ^0.8.7;
 
-import "Strings.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol";
+//import "Strings.sol";
 //import "Strings.sol";
 
 contract BlackJack {
 
     bool internal locked;
-    uint public gameInProgress          = 0;
+    uint public gameInProgress          = 0; //Is a game currently in progress?
     uint constant public BET_MIN        = 1 wei;    // The minimum bet
     uint constant public BET_MAX        = 1 ether; // The maximum bet
-    uint public houseBalance            = 0;
-    uint public playerBalance           = 0;
-    uint public betAmount               = 0;
-    uint randomNum                      = 0;
-    uint suit                           = 0;
-    uint rank                           = 0;
+    uint public houseBalance            = 0;  //How much money casino has behind the game?
+    uint public playerBalance           = 0;  //How much money does the player have in casino?
+    uint public betAmount               = 0;  //How much has the player wagered?
+    uint randomNum                      = 0;  //A random number
+    uint public playerCardCount         = 0;  //How many cards does the player have?
+    uint public dealerCardCount         = 0;  //How many cards does the dealer have?
+    uint public playerBusted            = 0;  //Did the player bust?
+    uint public dealerBusted            = 0;  //Did the dealer bust?
+    uint public finalPlayerCount        = 0;  //What is the maximum count of the player's hand?
+    uint public finalDealerCount        = 0;  //What is the maximum count of the dealers hand?
+    uint public playerStands            = 0;  //Did the player stand?
+    uint public dealerStands            = 0;  //Did the dealer stand?
+    uint public gameOutcome             = 0;  //Outcome of last game (0-No Outcome 1-House wins  2-Player wins 3- Push
     uint[2][16] public playersCards;
     uint[2][16] public dealersCards;
+    
+    
+    
     uint[2][2] public playerHandValue;
     uint[2][2] public dealerHandValue;
     uint[2][4] dealtCards;
-    uint public playerCardCount         = 0;
-    uint public dealerCardCount         = 0;
-    uint public playerBusted            = 0;
-    uint public dealerBusted            = 0;
-    uint public finalPlayerCount        = 0;
-    uint public finalDealerCount        = 0;
-    uint public playerStands            = 0;
-    uint public dealerStands            = 0;
+
+    uint suit                           = 0;  
+    uint rank                           = 0;
 
     uint nonce = 0;
             
@@ -280,6 +286,7 @@ contract BlackJack {
     function deal() public mutex() playerHasBet {
         
         //Reset the state variables for new hand
+        gameOutcome = 0;
         gameInProgress = 1;
         playerStands = 0;
         playerBusted = 0;
@@ -470,6 +477,7 @@ contract BlackJack {
 
             houseBalance = houseBalance + betAmount;
             betAmount = 0;
+            gameOutcome = 1;
 
             while (finalDealerCount < 17) {
 
@@ -519,7 +527,7 @@ contract BlackJack {
 
                 dealerBusted = 1;
                 gameInProgress = 0;
-
+                
                 if (dealerHandValue[1][0] <= dealerHandValue[1][1]) {
                 finalDealerCount = dealerHandValue[1][0];
                 }
@@ -531,6 +539,7 @@ contract BlackJack {
                     playerBalance = playerBalance + (betAmount * 2);
                     houseBalance = houseBalance - betAmount;
                     betAmount = 0;
+                    gameOutcome = 2;
                 }
             }
 
@@ -548,23 +557,34 @@ contract BlackJack {
 
     function evaluateWinner() internal {
 
-        if (finalDealerCount > finalPlayerCount) {
+
+        if (playerBusted == 1) {
 
             houseBalance = houseBalance + betAmount;
             betAmount = 0;
+            gameOutcome = 1;
+
+        }
+        if ((finalDealerCount > finalPlayerCount) && (playerBusted == 0)) {
+
+            houseBalance = houseBalance + betAmount;
+            betAmount = 0;
+            gameOutcome = 1;
 
         }
 
-        if (finalPlayerCount > finalDealerCount) {
+        if ((finalPlayerCount > finalDealerCount) && (playerBusted == 0)) {
 
             playerBalance = playerBalance + (betAmount * 2);
             houseBalance = houseBalance - betAmount;
             betAmount = 0;
+            gameOutcome = 2;
         }
 
-        if (finalDealerCount == finalPlayerCount) {
+        if ((finalDealerCount == finalPlayerCount) && (playerBusted == 0)) {
 
             gameIsPushed();
+            gameOutcome = 3;
 
         }
 
@@ -648,6 +668,7 @@ contract BlackJack {
             if (dealerHandValue[1][1] == 21) {
 
                 gameIsPushed();
+                gameOutcome = 3;
 
             }
 
@@ -656,6 +677,7 @@ contract BlackJack {
                 playerBalance = playerBalance + betAmount + ((betAmount * 3) / 2);
                 houseBalance = houseBalance - ((betAmount * 3) / 2);
                 betAmount = 0;
+                gameOutcome = 2;
 
             }  
 
@@ -669,7 +691,7 @@ contract BlackJack {
 
         playerBalance = playerBalance + betAmount;
         betAmount = 0;
-
+        gameOutcome = 3;
     }
 
 

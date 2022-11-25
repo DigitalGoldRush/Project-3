@@ -13,11 +13,9 @@ import dotenv
 if 'last_bet_amount' not in st.session_state:
     st.session_state.last_bet_amount = 0  
 
-
-
 dotenv.load_dotenv('.env') 
 
-w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:8545/'))
+w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:8545/',request_kwargs={'timeout':60}))
 contract_address = os.getenv('CURRENT_CONTRACT_ADDRESS')
 
 def load_contract():
@@ -53,6 +51,8 @@ def get_contract_variables():
     final_player_count = contract.functions.finalPlayerCount().call()
     final_dealer_count =  contract.functions.finalDealerCount().call()
     
+    game_outcome  =  contract.functions.gameOutcome().call()
+    
     return bet_min,\
            bet_max,\
            house_balance,\
@@ -66,7 +66,8 @@ def get_contract_variables():
            player_stands,\
            dealer_stands,\
            final_player_count,\
-           final_dealer_count
+           final_dealer_count,\
+           game_outcome
 
 
 def fund_contract(player_account, player_balance, amount):
@@ -169,21 +170,47 @@ def get_dealers_card_list(card_count=0):
 
 
 
+####################################################
+###               Main Page Views               ####
+####################################################
 
 
 
+if (contract_variables[5] == 0) & (contract_variables[6] < 2): #contract_variables[5] is game_in_progress. [6] is deal_card_count
+
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.markdown('<center>Pseudorandom Casino</center>', unsafe_allow_html=True)
 
 
-
-
-
-
-
-
-
-if (contract_variables[5] == 0) & (contract_variables[6] < 2):
+    col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
     
-    st.write(f'bet amount is -->', contract_variables[4])
+    with col4:
+        
+        st.write('')
+        if st.button('Deal'):
+
+            contract.functions.deal().transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
+            st.experimental_rerun()
+
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.markdown(f'<center>Current Bet Amount --> {contract_variables[4]}</center>', unsafe_allow_html=True)
+
+
+if (contract_variables[5] == 0) & (contract_variables[6] > 1):  #contract_variables[5] is game_in_progress. [6] is deal_card_count
+
+    
 
     
     players_cards = get_players_card_list(contract_variables[7])
@@ -191,7 +218,7 @@ if (contract_variables[5] == 0) & (contract_variables[6] < 2):
 
 
 
-    st.subheader(f'Dealers Has {contract_variables[13]}')
+    st.subheader(f'Dealer Has {contract_variables[13]}')
 
     col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
     i=1
@@ -212,46 +239,6 @@ if (contract_variables[5] == 0) & (contract_variables[6] < 2):
 
         exec('col' + str(i) + '.image(card[2])')
         i=i+1
-
-
-    if st.button('Deal'):
-
-        contract.functions.deal().transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
-        st.experimental_rerun()
-
-
-
-if (contract_variables[5] == 0) & (contract_variables[6] > 1):
-    
-
-    
-    players_cards = get_players_card_list(contract_variables[7])
-    dealers_cards = get_dealers_card_list(contract_variables[6])
-
-
-
-    st.subheader(f'Dealers Has {contract_variables[13]}')
-
-    col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
-    i=1
-    for card in dealers_cards:
-
-        exec('col' + str(i) + '.image(card[2])')
-        time.sleep(.5) 
-        i=i+1
-
-
-
-    st.subheader(f'Player Has {contract_variables[12]}')
-    col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
-
-
-    i=1
-    for card in players_cards:
-
-        exec('col' + str(i) + '.image(card[2])')
-        i=i+1
-
 
     if st.button('Rebet'):
 
@@ -268,24 +255,16 @@ if (contract_variables[5] == 0) & (contract_variables[6] > 1):
         st.experimental_rerun()
 
 
-
-if contract_variables[5] == 1:
+if contract_variables[5] == 1:  #contract_variables[5] is game outcome
     
-    st.write(f'bet amount is -->', contract_variables[4])
-
-    if st.button('Deal'):
-
-        contract.functions.deal().transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
-        st.experimental_rerun()
-
- 
+    st.markdown(f'</center>bet amount is --> {contract_variables[4]}', unsafe_allow_html=True)
 
     players_cards = get_players_card_list(contract_variables[7])
     dealers_cards = get_dealers_card_list(contract_variables[6])
 
 
 
-    st.subheader(f'Dealers Has {contract_variables[13]}')
+    st.subheader(f'Dealer Has {contract_variables[13]}')
 
     col1, col2, col3, col4, col5, col6, col7 , col8 = st.columns(8)
     i=1
@@ -326,12 +305,18 @@ if contract_variables[5] == 1:
         contract.functions.playerStand().transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
         st.experimental_rerun()
 
+if contract_variables[14] == 0:
 
+    st.subheader('Play a game')
 
-st.write(f'bet amount is -->', contract_variables[4])
-st.write('Game In Progress --> ', contract_variables[5])
-st.write('Player Count Is: ', contract_variables[12])
-st.write('Dealer Count Is: ', contract_variables[13])
-st.write(st.session_state.last_bet_amount)
-st.write(contract_variables)
+if contract_variables[14] == 1:
 
+    st.subheader('Dealer Wins')
+
+if contract_variables[14] == 2:
+
+    st.subheader('Player Wins')
+
+if contract_variables[14] == 3:
+
+    st.subheader('Game is a push')
