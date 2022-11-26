@@ -21,11 +21,11 @@ w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545/'))
 # Define the load_contract function
 def load_contract():
 
-    with open(Path('coinflip_abi.json')) as f:
+    with open(Path('Group Projects/Group Project # 3_Rock_Paper_scissors/Project-3/Starter code/Coinflip game/coinflip_abi.json')) as f:
         contract_abi = json.load(f)
 
-    contract_address = "0xF2F94a893698f86A871834E58768E82609707671"
-    #contract_address = os.getenv('CURRENT_CONTRACT_ADDRESS')
+    #contract_address = "0xF2F94a893698f86A871834E58768E82609707671"
+    contract_address = os.getenv('CURRENT_CONTRACT_ADDRESS')
 
     contract = w3.eth.contract(
         address=contract_address,
