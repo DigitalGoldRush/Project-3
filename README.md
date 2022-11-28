@@ -7,11 +7,13 @@ This code uses recent block hashes to generate "pseudorandom" numbers.  Do not d
 
 ## Dependencies
 
-Solidity = 0.8.17,  
-Python = 3.10.1,  
-Web3 = Latest,  
-Streamlit = Latest,  
-Any Ethereum network (Ganache used here)  
+[![Python](https://img.shields.io/badge/Python-3.9.12-blue)](https://www.python.org/downloads/release/python-3912/)
+
+[![Solidity](https://img.shields.io/badge/Solidity-0.8.9-blue)](https://docs.soliditylang.org/en/v0.8.9/)
+
+[![Streamlit](https://img.shields.io/badge/Streamlit-0.88.0-blue)](https://docs.streamlit.io/en/stable/)
+
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/DigitalGoldRush?tab=repositories)
 
 other Python libraries:
 
