@@ -43,9 +43,9 @@ with open("blackjack_abi.json", "w") as file:
 
 
 w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:8545"))
-chain_id = 1337
-address = "0xa8cea65a289DA148e0C8ce7b06B66d8389E776C2"
-private_key = "0xeba28f1457daa57bbe9a455ad1caeb1a3856c67f45ea4285eb473dbd15e0b33c" 
+chain_id = 1337 
+address = os.getenv('DEPLOY_WALLET_ADDRESS') # in dotenv file 
+private_key = os.getenv('PRIVATE_KEY') #in dotenv file 
 
 # Create the contract in Python
 blackjack_contract = w3.eth.contract(abi=abi, bytecode=bytecode)

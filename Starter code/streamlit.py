@@ -22,10 +22,10 @@ def load_contract():
     with open('blackjack_abi.json') as f:
         contract_abi = json.load(f)
         contract = w3.eth.contract(
-        address=contract_address,
-        abi=contract_abi,
-    )
-    return contract
+                address=contract_address,
+                abi=contract_abi,
+                )
+        return contract
 
 contract = load_contract()
 accounts = w3.eth.accounts
@@ -35,39 +35,39 @@ def get_contract_variables():
     bet_max = contract.functions.BET_MAX().call()
     house_balance = contract.functions.houseBalance().call()
     player_balance = contract.functions.playerBalance().call()
-    
+
     bet_amount = contract.functions.betAmount().call()
 
     game_in_progress = contract.functions.gameInProgress().call()
     dealer_card_count = contract.functions.dealerCardCount().call()
     player_card_count = contract.functions.playerCardCount().call()
-    
+
     player_busted = contract.functions.playerBusted().call()
     dealer_busted =  contract.functions.dealerBusted().call()
-    
+
     player_stands = contract.functions.playerStands().call()
     dealer_stands =  contract.functions.dealerStands().call()
-    
+
     final_player_count = contract.functions.finalPlayerCount().call()
     final_dealer_count =  contract.functions.finalDealerCount().call()
-    
+
     game_outcome  =  contract.functions.gameOutcome().call()
-    
+
     return bet_min,\
-           bet_max,\
-           house_balance,\
-           player_balance,\
-           bet_amount,\
-           game_in_progress,\
-           dealer_card_count,\
-           player_card_count,\
-           player_busted,\
-           dealer_busted,\
-           player_stands,\
-           dealer_stands,\
-           final_player_count,\
-           final_dealer_count,\
-           game_outcome
+            bet_max,\
+            house_balance,\
+            player_balance,\
+            bet_amount,\
+            game_in_progress,\
+            dealer_card_count,\
+            player_card_count,\
+            player_busted,\
+            dealer_busted,\
+            player_stands,\
+            dealer_stands,\
+            final_player_count,\
+            final_dealer_count,\
+            game_outcome
 
 
 def fund_contract(player_account, player_balance, amount):
@@ -108,7 +108,7 @@ with st.sidebar:
             st.experimental_rerun()
 
     with col2:
-        
+
         if st.button('Withdraw'):
 
             nonce = w3.eth.getTransactionCount(player_account)
@@ -118,7 +118,7 @@ with st.sidebar:
 
     bet_amount = st.number_input('Bet Amount')  
     if st.button('Place Bet'):
-       
+
         st.session_state.last_bet_amount = bet_amount
         contract.functions.placeBet(int(bet_amount)).transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
         st.experimental_rerun()
@@ -126,7 +126,7 @@ with st.sidebar:
 
 
 def get_players_card_list(card_count=0):
-    
+
     card_size = 3
     width_multiplier = 25
     height_multiplier = 35
@@ -135,7 +135,7 @@ def get_players_card_list(card_count=0):
     players_cards = []
     i=1
     while i <= card_count:  #gets player card count from contract_variables
-        
+
         card_rank =  contract.functions.playersCards(i,0).call()
         card_suit =  contract.functions.playersCards(i,1).call()
         card_path = helper_functions.get_card_image_string(card_rank,card_suit)
@@ -143,12 +143,12 @@ def get_players_card_list(card_count=0):
         card_image = card_image.resize(((card_size * width_multiplier), (card_size * height_multiplier)))
         players_cards.append([card_rank, card_suit, card_image])  
         i = i + 1
-         
+
     return players_cards
 
 
 def get_dealers_card_list(card_count=0):
-    
+
     card_size = 3
     width_multiplier = 25
     height_multiplier = 35
@@ -157,7 +157,7 @@ def get_dealers_card_list(card_count=0):
     dealers_cards = []
     i=1
     while i <= card_count:  #gets dealer card count from contract_variables
-       
+
         card_rank =  contract.functions.dealersCards(i,0).call()
         card_suit =  contract.functions.dealersCards(i,1).call()
         card_path = helper_functions.get_card_image_string(card_rank,card_suit)
@@ -165,7 +165,7 @@ def get_dealers_card_list(card_count=0):
         card_image = card_image.resize(((card_size * width_multiplier), (card_size * height_multiplier)))
         dealers_cards.append([card_rank, card_suit, card_image])  
         i = i + 1
-         
+
     return dealers_cards
 
 
@@ -192,9 +192,9 @@ if (contract_variables[5] == 0) & (contract_variables[6] < 2): #contract_variabl
 
 
     col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
-    
+
     with col4:
-        
+
         st.write('')
         if st.button('Deal'):
 
@@ -210,9 +210,9 @@ if (contract_variables[5] == 0) & (contract_variables[6] < 2): #contract_variabl
 
 if (contract_variables[5] == 0) & (contract_variables[6] > 1):  #contract_variables[5] is game_in_progress. [6] is deal_card_count
 
-    
 
-    
+
+
     players_cards = get_players_card_list(contract_variables[7])
     dealers_cards = get_dealers_card_list(contract_variables[6])
 
@@ -245,18 +245,18 @@ if (contract_variables[5] == 0) & (contract_variables[6] > 1):  #contract_variab
         if contract_variables[4] > 0:
 
             last_bet_amount = bet_amount
-       
+
         else:
 
             last_bet_amount = st.session_state.last_bet_amount
             contract.functions.placeBet(int(last_bet_amount)).transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
-        
+
         contract.functions.deal().transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
         st.experimental_rerun()
 
 
 if contract_variables[5] == 1:  #contract_variables[5] is game outcome
-    
+
     st.markdown(f'</center>bet amount is --> {contract_variables[4]}', unsafe_allow_html=True)
 
     players_cards = get_players_card_list(contract_variables[7])
@@ -301,7 +301,7 @@ if contract_variables[5] == 1:  #contract_variables[5] is game outcome
 
 
     if st.button('Stand'):
-        
+
         contract.functions.playerStand().transact({'from': player_account, 'gasPrice': w3.eth.gas_price,})
         st.experimental_rerun()
 
